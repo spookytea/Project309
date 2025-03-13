@@ -7,9 +7,13 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.HealthAndSafety
+import androidx.compose.material.icons.outlined.LocalPizza
 import androidx.compose.material.icons.outlined.RamenDining
-import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.SportsEsports
+import androidx.compose.material.icons.outlined.SportsFootball
+import androidx.compose.material.icons.outlined.VideogameAsset
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -27,15 +31,15 @@ import androidx.navigation.compose.rememberNavController
 import com.example.project309.ui.theme.Project309Theme
 
 class MainActivity : ComponentActivity() {
-    data class NavItem(val name: String, val icon: ImageVector)
+    data class NavItem(val name: String, val longName: String, val icon: ImageVector)
 
     val tabs = arrayOf<NavItem>(
-        NavItem("Stats", Icons.Outlined.HealthAndSafety),
-        NavItem("Play", Icons.Outlined.SportsEsports),
-        NavItem("Feed", Icons.Outlined.RamenDining),
-        NavItem("Settings", Icons.Outlined.Settings)
+        NavItem("Stats", "Pet Statistics", Icons.Outlined.HealthAndSafety),
+        NavItem("Play", "Play with Your Pet", Icons.Outlined.SportsEsports),
+        NavItem("Feed", "Feed Your Pet", Icons.Outlined.RamenDining),
     )
 
+    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -61,6 +65,9 @@ class MainActivity : ComponentActivity() {
                             }
 
                         }
+                    },
+                    topBar = {
+                        CenterAlignedTopAppBar(title = { Text(tabs[sel_tab].longName) })
                     }
 
                 ) { p ->
@@ -70,20 +77,26 @@ class MainActivity : ComponentActivity() {
                         Modifier.padding(p),
                     ) {
 
-                        composable("Stats") {
-                            StatsView()
-                        }
+                        composable("Stats") { StatsView() }
 
                         composable("Play") {
-                            Text("Play")
+                            AnimalAndIconView(
+                                "Game",
+                                listOf(
+                                    Icons.Outlined.SportsFootball,
+                                    Icons.Outlined.VideogameAsset
+                                )
+                            )
                         }
 
                         composable("Feed") {
-                            Text("Feed")
-                        }
-
-                        composable("Settings") {
-                            Text("Settings")
+                            AnimalAndIconView(
+                                "Food",
+                                listOf(
+                                    Icons.Outlined.RamenDining,
+                                    Icons.Outlined.LocalPizza
+                                )
+                            )
                         }
 
                     }

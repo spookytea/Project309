@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
@@ -44,7 +43,6 @@ fun StatsView() {
 
 
     Column {
-        CenterAlignedTopAppBar(title = { Text("Creature Statistics") })
         AnimalView(Modifier.weight(1.0f))
         (1..3).forEach { _ ->
             LinearProgressIndicator(
