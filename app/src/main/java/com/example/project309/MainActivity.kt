@@ -34,9 +34,21 @@ class MainActivity : ComponentActivity() {
     data class NavItem(val name: String, val longName: String, val icon: ImageVector)
 
     val tabs = arrayOf<NavItem>(
-        NavItem("Stats", "Pet Statistics", Icons.Outlined.HealthAndSafety),
-        NavItem("Play", "Play with Your Pet", Icons.Outlined.SportsEsports),
-        NavItem("Feed", "Feed Your Pet", Icons.Outlined.RamenDining),
+        NavItem(
+            name     = "Stats",
+            longName = "Pet Statistics",
+            icon     = Icons.Outlined.HealthAndSafety
+        ),
+        NavItem(
+            name     = "Play",
+            longName = "Play with Your Pet",
+            icon     = Icons.Outlined.SportsEsports
+        ),
+        NavItem(
+            name     = "Feed",
+            longName = "Feed Your Pet",
+            icon     = Icons.Outlined.RamenDining
+        )
     )
 
     @OptIn(ExperimentalMaterial3Api::class)
@@ -67,7 +79,11 @@ class MainActivity : ComponentActivity() {
                         }
                     },
                     topBar = {
-                        CenterAlignedTopAppBar(title = { Text(tabs[sel_tab].longName) })
+                        CenterAlignedTopAppBar(
+                            title = {
+                                Text(tabs[sel_tab].longName)
+                            }
+                        )
                     }
 
                 ) { p ->
@@ -82,7 +98,7 @@ class MainActivity : ComponentActivity() {
                         composable("Play") {
                             AnimalAndIconView(
                                 "Game",
-                                listOf(
+                                arrayOf(
                                     Icons.Outlined.SportsFootball,
                                     Icons.Outlined.VideogameAsset
                                 )
@@ -92,7 +108,7 @@ class MainActivity : ComponentActivity() {
                         composable("Feed") {
                             AnimalAndIconView(
                                 "Food",
-                                listOf(
+                                arrayOf(
                                     Icons.Outlined.RamenDining,
                                     Icons.Outlined.LocalPizza
                                 )

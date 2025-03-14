@@ -19,10 +19,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StatsView() {
-//    AnimalDataModel.Load()
     val progress by remember { mutableFloatStateOf(0.9f) }
 
 
@@ -39,8 +37,6 @@ fun StatsView() {
             else -> Color.Green
         }
     }
-
-
 
     Column {
         AnimalView(Modifier.weight(1.0f))

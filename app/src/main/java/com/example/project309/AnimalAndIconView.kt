@@ -12,15 +12,15 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun AnimalAndIconView(name: String, icons: List<ImageVector>) {
+fun AnimalAndIconView(name: String, icons: Array<ImageVector>) {
     Column {
         AnimalView(Modifier.weight(1.0f))
         Row(modifier = Modifier.align(Alignment.CenterHorizontally)) {
-            icons.forEach {
+            icons.forEach { icon ->
                 Image(
-                    it, "$name item", modifier = Modifier
-                        .size(72.dp)
-                        .padding(10.dp)
+                    icon,
+                    "$name item",
+                    Modifier.size(72.dp).padding(10.dp)
                 )
             }
         }
