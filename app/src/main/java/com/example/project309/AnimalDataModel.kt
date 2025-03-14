@@ -19,19 +19,19 @@ data class AnimalDataModel(
     var art: String = ""
 )
 
-class AnimalDataViewModel(val app: Application) : AndroidViewModel(app){
+class AnimalDataViewModel(private val app: Application) : AndroidViewModel(app){
 
     var animal by mutableStateOf(AnimalDataModel())
         private set
 
     init {
-        val f = File(app.applicationContext.filesDir, "animal.txt")
+        val f = File(app.applicationContext.filesDir, "animal.json")
         if (f.createNewFile()) this.Save()
         animal = Json.decodeFromString(f.readText())
     }
 
     fun Save() {
-        val f = File(app.applicationContext.filesDir, "animal.txt")
+        val f = File(app.applicationContext.filesDir, "animal.json")
         f.writeText(Json.encodeToString(animal))
     }
 }
