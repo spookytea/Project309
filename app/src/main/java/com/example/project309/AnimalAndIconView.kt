@@ -12,9 +12,9 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun AnimalAndIconView(name: String, icons: Array<ImageVector>) {
+fun AnimalAndIconView(viewModel: AnimalDataViewModel, name: String, icons: Array<ImageVector>) {
     Column {
-        AnimalView(Modifier.weight(1.0f))
+        AnimalView(Modifier.weight(1.0f), viewModel)
         Row(modifier = Modifier.align(Alignment.CenterHorizontally)) {
             icons.forEach { icon ->
                 Image(

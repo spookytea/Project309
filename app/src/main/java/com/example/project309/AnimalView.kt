@@ -8,12 +8,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 
 @Composable
-fun AnimalView(modifier: Modifier = Modifier) {
+fun AnimalView(modifier: Modifier = Modifier, viewModel: AnimalDataViewModel) {
     Text(
-        text = "Animal Goes Here",
-        modifier = modifier
-            .fillMaxSize()
-            .wrapContentHeight(),
+        text = viewModel.animal.kind,
+        modifier = modifier.fillMaxSize().wrapContentHeight(),
         textAlign = TextAlign.Center
     )
 }

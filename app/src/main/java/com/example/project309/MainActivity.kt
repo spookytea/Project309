@@ -25,6 +25,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -58,6 +59,7 @@ class MainActivity : ComponentActivity() {
 
 
         setContent {
+            val viewModel: AnimalDataViewModel = viewModel()
             val nav = rememberNavController()
             var sel_tab by remember { mutableIntStateOf(0) }
             Project309Theme {
@@ -80,9 +82,7 @@ class MainActivity : ComponentActivity() {
                     },
                     topBar = {
                         CenterAlignedTopAppBar(
-                            title = {
-                                Text(tabs[sel_tab].longName)
-                            }
+                            title = { Text(tabs[sel_tab].longName) }
                         )
                     }
 
@@ -93,20 +93,23 @@ class MainActivity : ComponentActivity() {
                         Modifier.padding(p),
                     ) {
 
-                        composable("Stats") { StatsView() }
+                        composable("Stats") { StatsView(viewModel) }
 
                         composable("Play") {
                             AnimalAndIconView(
+                                viewModel,
                                 "Game",
                                 arrayOf(
                                     Icons.Outlined.SportsFootball,
                                     Icons.Outlined.VideogameAsset
-                                )
+                                ),
+
                             )
                         }
 
                         composable("Feed") {
                             AnimalAndIconView(
+                                viewModel,
                                 "Food",
                                 arrayOf(
                                     Icons.Outlined.RamenDining,
