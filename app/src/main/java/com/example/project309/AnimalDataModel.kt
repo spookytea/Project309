@@ -5,14 +5,18 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.AndroidViewModel
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import java.io.File
-import java.lang.Integer.parseInt
 
+@Serializable
 data class AnimalDataModel(
-    var energyLevel: Int = 20,
-    var hungerLevel: Int = 20,
+    var energyLevel: Int = 100,
+    var hungerLevel: Int = 100,
     var funLevel: Int = 100,
-    var kind: String = "Cat"
+    var name: String = "Cat",
+    var art: String = ""
 )
 
 class AnimalDataViewModel(val app: Application) : AndroidViewModel(app){
@@ -23,27 +27,12 @@ class AnimalDataViewModel(val app: Application) : AndroidViewModel(app){
     init {
         val f = File(app.applicationContext.filesDir, "animal.txt")
         if (f.createNewFile()) this.Save()
-
-        for(i in f.readLines()){
-            val arr = i.split("=")
-            when(arr[0]){
-                "Energy" -> animal.energyLevel = parseInt(arr[1])
-                "Hunger" -> animal.hungerLevel = parseInt(arr[1])
-                "Fun"    -> animal.funLevel    = parseInt(arr[1])
-                "Kind"   -> animal.kind        = arr[1]
-            }
-        }
+        animal = Json.decodeFromString(f.readText())
     }
 
-    fun Save(){
+    fun Save() {
         val f = File(app.applicationContext.filesDir, "animal.txt")
-        f.writeText("""
-                Energy=${animal.energyLevel}
-                Hunger=${animal.hungerLevel}
-                Fun=${animal.funLevel}
-                Kind=${animal.kind}
-            """.trimIndent()
-        )
+        f.writeText(Json.encodeToString(animal))
     }
 }
 
