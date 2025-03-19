@@ -1,6 +1,9 @@
 package com.example.project309
 
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -11,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
@@ -18,9 +22,27 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun StatsView(viewModel: AnimalDataViewModel) {
 
+    if(LocalConfiguration.current.orientation == Configuration.ORIENTATION_PORTRAIT){
+        Column {
+            AnimalView(Modifier.weight(1.0f), viewModel)
+            StatsBars(viewModel)
+        }
+    } else {
+        Row {
+            AnimalView(Modifier.fillMaxSize(), viewModel)
+            StatsBars(viewModel)
+        }
+    }
 
+
+
+
+
+}
+
+@Composable
+fun StatsBars(viewModel: AnimalDataViewModel){
     val mod_bar = Modifier
-        .fillMaxWidth()
         .padding(5.dp)
         .height(30.dp)
         .clip(RoundedCornerShape(10.dp))
@@ -34,7 +56,6 @@ fun StatsView(viewModel: AnimalDataViewModel) {
     }
 
     Column {
-        AnimalView(Modifier.weight(1.0f), viewModel)
         mapOf(
             "Fun"    to viewModel.animal.funLevel,
             "Hunger" to viewModel.animal.hungerLevel,
@@ -55,8 +76,8 @@ fun StatsView(viewModel: AnimalDataViewModel) {
             )
         }
 
-
     }
+
 
 
 }

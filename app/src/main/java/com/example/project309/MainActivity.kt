@@ -6,12 +6,10 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Bed
 import androidx.compose.material.icons.outlined.HealthAndSafety
-import androidx.compose.material.icons.outlined.LocalPizza
 import androidx.compose.material.icons.outlined.RamenDining
 import androidx.compose.material.icons.outlined.SportsEsports
-import androidx.compose.material.icons.outlined.SportsFootball
-import androidx.compose.material.icons.outlined.VideogameAsset
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -49,6 +47,11 @@ class MainActivity : ComponentActivity() {
             name     = "Feed",
             longName = "Feed Your Pet",
             icon     = Icons.Outlined.RamenDining
+        ),
+        NavItem(
+            name     = "Sleep",
+            longName = "Send your pet to sleep",
+            icon     = Icons.Outlined.Bed
         )
     )
 
@@ -98,10 +101,9 @@ class MainActivity : ComponentActivity() {
                         composable("Play") {
                             AnimalAndIconView(
                                 viewModel,
-                                "Game",
                                 arrayOf(
-                                    Icons.Outlined.SportsFootball,
-                                    Icons.Outlined.VideogameAsset
+                                    "⚾",
+                                    "🎮"
                                 ),
 
                             )
@@ -110,12 +112,14 @@ class MainActivity : ComponentActivity() {
                         composable("Feed") {
                             AnimalAndIconView(
                                 viewModel,
-                                "Food",
                                 arrayOf(
-                                    Icons.Outlined.RamenDining,
-                                    Icons.Outlined.LocalPizza
+                                    "\uD83C\uDF55"
                                 )
                             )
+                        }
+
+                        composable("Sleep"){
+                            SleepView(viewModel)
                         }
 
                     }
