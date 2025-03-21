@@ -1,9 +1,11 @@
 package com.example.project309
 
-import android.content.res.Configuration
+import android.annotation.SuppressLint
+import android.content.res.Configuration.ORIENTATION_LANDSCAPE
+import android.content.res.Configuration.ORIENTATION_PORTRAIT
+import android.content.res.Configuration.ORIENTATION_UNDEFINED
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -11,6 +13,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -19,32 +22,35 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
 
+@SuppressLint("SwitchIntDef")
 @Composable
 fun StatsView(viewModel: AnimalDataViewModel) {
 
-    if(LocalConfiguration.current.orientation == Configuration.ORIENTATION_PORTRAIT){
-        Column {
+    when(LocalConfiguration.current.orientation){
+        ORIENTATION_PORTRAIT -> Column {
             AnimalView(Modifier.weight(1.0f), viewModel)
-            StatsBars(viewModel)
+            StatsBars(viewModel=viewModel)
         }
-    } else {
-        Row {
-            AnimalView(Modifier.fillMaxSize(), viewModel)
-            StatsBars(viewModel)
+
+        ORIENTATION_LANDSCAPE -> Row {
+            AnimalView(Modifier.weight(0.25f), viewModel)
+            StatsBars(Modifier.weight(0.75f).align(Alignment.CenterVertically), viewModel=viewModel)
+        }
+
+        ORIENTATION_UNDEFINED -> {
+            Text("Unknown Orientation")
         }
     }
 
-
-
-
-
 }
 
+
 @Composable
-fun StatsBars(viewModel: AnimalDataViewModel){
+fun StatsBars(modifier: Modifier = Modifier, viewModel: AnimalDataViewModel){
     val mod_bar = Modifier
         .padding(5.dp)
         .height(30.dp)
+        .fillMaxWidth()
         .clip(RoundedCornerShape(10.dp))
 
     val barColor = { num: Float ->
@@ -55,7 +61,7 @@ fun StatsBars(viewModel: AnimalDataViewModel){
         }
     }
 
-    Column {
+    Column(modifier) {
         mapOf(
             "Fun"    to viewModel.animal.funLevel,
             "Hunger" to viewModel.animal.hungerLevel,
