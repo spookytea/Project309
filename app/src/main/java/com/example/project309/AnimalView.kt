@@ -12,29 +12,38 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 
+
 @Composable
-fun AnimalView(modifier: Modifier = Modifier, viewModel: AnimalDataViewModel) {
+fun AnimalView(modifier: Modifier = Modifier, art: String, name: String = "") {
     var size by remember { mutableStateOf(10.em) } // Stupidly large to be scaled down later
+    var invisible by remember { mutableStateOf(true) } //Hides text until scaled correctly
     OutlinedCard(modifier.fillMaxWidth().padding(20.dp)) {
         Text(
-            text = viewModel.animal.art,
-            modifier = modifier.fillMaxSize().wrapContentSize(),
+            text = art,
+            modifier = modifier.fillMaxSize().wrapContentSize().alpha(if (invisible) 0f else 1.0f),
             style = TextStyle(fontSize = size),
             fontFamily = FontFamily.Monospace,
-            maxLines = viewModel.animal.art.count{it == '\n'}, //Makes sure lines are not split
-            onTextLayout = {tL -> if(tL.didOverflowHeight || tL.didOverflowWidth) size *= 0.9F}
+            maxLines = art.count{it == '\n'} + 1, //Makes sure lines are not split
+            onTextLayout = { tL ->
+                invisible = tL.didOverflowHeight || tL.didOverflowWidth
+                if(invisible) size *= 0.9F
+            },
             //Scales down font size to  fit space
 
         )
-        Text(viewModel.animal.name, Modifier.fillMaxWidth().padding(bottom = 10.dp), textAlign = TextAlign.Center)
+        if(name != "")
+            Text(name, Modifier.fillMaxWidth().padding(bottom = 10.dp), textAlign = TextAlign.Center)
     }
 
 
 
 }
+
+

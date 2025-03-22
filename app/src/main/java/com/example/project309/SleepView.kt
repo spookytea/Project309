@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import android.content.res.Configuration.ORIENTATION_LANDSCAPE
 import android.content.res.Configuration.ORIENTATION_PORTRAIT
 import android.content.res.Configuration.ORIENTATION_UNDEFINED
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,14 +19,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 
 @SuppressLint("SwitchIntDef")
 @Composable
-fun SleepView(viewModel: AnimalDataViewModel){
+fun SleepView(){
+    val viewModel: AnimalDataViewModel = viewModel(LocalActivity.current as ComponentActivity)
     when(LocalConfiguration.current.orientation){
         ORIENTATION_PORTRAIT -> Column {
-            AnimalView(Modifier.weight(1.0f), viewModel)
+            AnimalView(Modifier.weight(1.0f), viewModel.animal.art, viewModel.animal.name)
             Button(
                 onClick = {},
                 Modifier.align(Alignment.CenterHorizontally)
@@ -36,7 +40,7 @@ fun SleepView(viewModel: AnimalDataViewModel){
         }
 
         ORIENTATION_LANDSCAPE -> Row {
-            AnimalView(Modifier.weight(0.75f), viewModel)
+            AnimalView(Modifier.weight(0.75f), viewModel.animal.art, viewModel.animal.name)
             Button(
 
                 onClick  = {},

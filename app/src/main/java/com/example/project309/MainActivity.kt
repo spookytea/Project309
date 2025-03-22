@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
@@ -30,7 +31,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -41,7 +41,7 @@ import kotlinx.coroutines.launch
 class MainActivity : ComponentActivity() {
 
     private data class NavItem(val name: String, val longName: String, val icon: ImageVector)
-    private val tabs = arrayOf<NavItem>(
+    private val tabs = arrayOf(
         NavItem(
             name     = "Stats",
             longName = "Pet Statistics",
@@ -64,14 +64,20 @@ class MainActivity : ComponentActivity() {
         )
     )
 
+    @Suppress("unused")
+    private val viewModel by viewModels<AnimalDataViewModel>()
+
 
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            val viewModel: AnimalDataViewModel = viewModel()
+
+            AddAnAnimalView()
+
             val nav = rememberNavController()
+
             var selected by remember { mutableIntStateOf(0) }
             val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
             val scope = rememberCoroutineScope()
@@ -107,7 +113,7 @@ class MainActivity : ComponentActivity() {
                             })
 
                         }
-                    ) { p -> NavView(Modifier.padding(p), viewModel, nav) }
+                    ) { p -> NavView(Modifier.padding(p), nav) }
                 }
 
             }
@@ -117,20 +123,20 @@ class MainActivity : ComponentActivity() {
 
 
     @Composable
-    private fun NavView(modifier: Modifier = Modifier, viewModel: AnimalDataViewModel, nav: NavHostController){
+    private fun NavView(modifier: Modifier = Modifier, nav: NavHostController){
         NavHost(
             nav,
             startDestination = tabs[0].name,
             modifier,
         ) {
 
-            composable("Stats") { StatsView(viewModel) }
+            composable("Stats") { StatsView() }
 
-            composable("Play") { AnimalAndIconView(viewModel, arrayOf("⚾", "🎮")) }
+            composable("Play") { AnimalAndIconView(arrayOf("⚾", "🎮")) }
 
-            composable("Feed") { AnimalAndIconView(viewModel, arrayOf("\uD83C\uDF55")) }
+            composable("Feed") { AnimalAndIconView(arrayOf("\uD83C\uDF55")) }
 
-            composable("Sleep"){ SleepView(viewModel) }
+            composable("Sleep"){ SleepView() }
 
         }
 
