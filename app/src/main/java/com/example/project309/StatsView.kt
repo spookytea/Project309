@@ -28,17 +28,16 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 @SuppressLint("SwitchIntDef")
 @Composable
 fun StatsView(){
-    val viewModel: AnimalDataViewModel = viewModel(LocalActivity.current as ComponentActivity)
 
     when(LocalConfiguration.current.orientation){
         ORIENTATION_PORTRAIT -> Column {
-            AnimalView(Modifier.weight(1.0f), viewModel.animal.art, viewModel.animal.name)
-            StatsBars(viewModel=viewModel)
+            AnimalView(Modifier.weight(1.0f))
+            StatsBars()
         }
 
         ORIENTATION_LANDSCAPE -> Row {
-            AnimalView(Modifier.weight(0.25f), viewModel.animal.art, viewModel.animal.name)
-            StatsBars(Modifier.weight(0.75f).align(Alignment.CenterVertically), viewModel=viewModel)
+            AnimalView(Modifier.weight(0.25f))
+            StatsBars(Modifier.weight(0.75f).align(Alignment.CenterVertically))
         }
 
         ORIENTATION_UNDEFINED -> {
@@ -50,12 +49,8 @@ fun StatsView(){
 
 
 @Composable
-fun StatsBars(modifier: Modifier = Modifier, viewModel: AnimalDataViewModel){
-    val mod_bar = Modifier
-        .padding(5.dp)
-        .height(30.dp)
-        .fillMaxWidth()
-        .clip(RoundedCornerShape(10.dp))
+fun StatsBars(modifier: Modifier = Modifier){
+    val viewModel: AnimalDataViewModel = viewModel(LocalActivity.current as ComponentActivity)
 
     val barColor = { num: Float ->
         when {
@@ -75,7 +70,10 @@ fun StatsBars(modifier: Modifier = Modifier, viewModel: AnimalDataViewModel){
             val asProgress = num.toFloat() / 100
 
             LinearProgressIndicator(
-                modifier = mod_bar,
+                modifier = Modifier.padding(5.dp)
+                                   .height(30.dp)
+                                   .fillMaxWidth()
+                                   .clip(RoundedCornerShape(10.dp)),
                 progress = { asProgress },
                 color = barColor(asProgress)
             )

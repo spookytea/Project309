@@ -10,17 +10,21 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Card
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Slider
+import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -35,9 +39,11 @@ fun AddAnAnimalView(){
     val animals: Array<String> = LocalContext.current.resources.getStringArray(R.array.animals)
     val pagerState = rememberPagerState(pageCount = {animals.count()})
 
+    var hue by remember { mutableFloatStateOf(0.5f) }
+
     if(showDialog) {
         Dialog({showDialog = false}) {
-            Card(Modifier.size(400.dp, 400.dp)) {
+            Card(Modifier.size(600.dp, 600.dp)) {
                 Column(
                     Modifier.fillMaxSize(),
                     verticalArrangement = Arrangement.Center,
@@ -48,18 +54,30 @@ fun AddAnAnimalView(){
                         modifier = Modifier.weight(0.75f),
                         beyondViewportPageCount = 1
                     ) {
-                        AnimalView(Modifier.fillMaxSize(), animals[it])
+                        AnimalView(Modifier.fillMaxSize(), animals[it], color = Color.hsv(hue, 1f,1f))
                     }
 
-                    TextField(
+                    val col = Color.hsv(hue, 1f,1f)
+                    Slider(
+                        modifier = Modifier.weight(0.33f),
+                        value = hue,
+                        valueRange = 0f..360f,
+                        onValueChange = { hue = it },
+                        colors = SliderDefaults.colors().copy(col, col)
+                    )
+
+
+
+
+                    OutlinedTextField(
                         name,
                         { name = it },
                         label = { Text("Name") },
                         modifier = Modifier.padding(bottom = 20.dp)
                     )
-                    TextButton({
-                        viewModel.addAnimal(name, animals[pagerState.currentPage])
 
+                    TextButton({
+                        viewModel.addAnimal(name, pagerState.currentPage, hue=hue)
                         showDialog = false
                     }) {
                         Text("Add Animal")

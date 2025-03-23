@@ -8,7 +8,8 @@ data class AnimalDataModel(
     val hungerLevel: Int = 100,
     val funLevel: Int = 100,
     val name: String = "",
-    val art: String = ""
+    val artIndex: Int = 0,
+    val hue: Float = 0f
 )
 
 
