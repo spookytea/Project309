@@ -20,7 +20,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,60 +30,58 @@ import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
-fun AddAnAnimalView(){
+fun AddAnAnimalView(dismiss: () -> Unit) {
     val viewModel: AnimalDataViewModel = viewModel(LocalActivity.current as ComponentActivity)
 
     var name by remember {mutableStateOf("")}
-    var showDialog by rememberSaveable { mutableStateOf(true) }
     val animals: Array<String> = LocalContext.current.resources.getStringArray(R.array.animals)
     val pagerState = rememberPagerState(pageCount = {animals.count()})
 
-    var hue by remember { mutableFloatStateOf(0.5f) }
+    var hue by remember { mutableFloatStateOf(180f) }
 
-    if(showDialog) {
-        Dialog({showDialog = false}) {
-            Card(Modifier.size(600.dp, 600.dp)) {
-                Column(
-                    Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
+    Dialog(dismiss) {
+        Card(Modifier.size(400.dp, 400.dp)) {
+            Column(
+                Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                HorizontalPager(
+                    pagerState,
+                    modifier = Modifier.weight(0.75f),
+                    beyondViewportPageCount = 1
                 ) {
-                    HorizontalPager(
-                        pagerState,
-                        modifier = Modifier.weight(0.75f),
-                        beyondViewportPageCount = 1
-                    ) {
-                        AnimalView(Modifier.fillMaxSize(), animals[it], color = Color.hsv(hue, 1f,1f))
-                    }
-
-                    val col = Color.hsv(hue, 1f,1f)
-                    Slider(
-                        modifier = Modifier.weight(0.33f),
-                        value = hue,
-                        valueRange = 0f..360f,
-                        onValueChange = { hue = it },
-                        colors = SliderDefaults.colors().copy(col, col)
-                    )
-
-
-
-
-                    OutlinedTextField(
-                        name,
-                        { name = it },
-                        label = { Text("Name") },
-                        modifier = Modifier.padding(bottom = 20.dp)
-                    )
-
-                    TextButton({
-                        viewModel.addAnimal(name, pagerState.currentPage, hue=hue)
-                        showDialog = false
-                    }) {
-                        Text("Add Animal")
-                    }
+                    AnimalView(Modifier.fillMaxSize(), animals[it], color = Color.hsv(hue, 1f,1f))
                 }
 
+                val col = Color.hsv(hue, 1f,1f)
+                Slider(
+                    modifier = Modifier.padding(start=20.dp, end=20.dp),
+                    value = hue,
+                    valueRange = 0f..360f,
+                    onValueChange = { hue = it },
+                    colors = SliderDefaults.colors(thumbColor = col, activeTrackColor = col, inactiveTrackColor = col.copy(alpha=0.25f))
+                )
+
+
+
+
+                OutlinedTextField(
+                    name,
+                    { name = it },
+                    label = { Text("Name") },
+                    modifier = Modifier.padding(bottom = 20.dp)
+                )
+
+                TextButton({
+                    viewModel.addAnimal(name, pagerState.currentPage, hue=hue)
+                    dismiss()
+                }) {
+                    Text("Add Animal")
+                }
             }
+
         }
     }
+
 }

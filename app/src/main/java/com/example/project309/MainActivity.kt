@@ -26,8 +26,10 @@ import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -74,15 +76,18 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
 
-            AddAnAnimalView()
+
+
+
 
             val nav = rememberNavController()
 
             var selected by remember { mutableIntStateOf(0) }
             val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
             val scope = rememberCoroutineScope()
-
-            Project309Theme {
+            var showDialog by rememberSaveable { mutableStateOf(true) }
+            if(showDialog) AddAnAnimalView { showDialog = false }
+            else Project309Theme {
                 ModalNavigationDrawer(
                     drawerState = drawerState,
                     drawerContent = {
@@ -95,7 +100,7 @@ class MainActivity : ComponentActivity() {
                                     onClick = {
                                         selected = index
                                         nav.navigate(t.name)
-                                        scope.launch {drawerState.close()}
+                                        scope.launch { drawerState.close() }
                                     }
                                 )
                             }
@@ -104,16 +109,18 @@ class MainActivity : ComponentActivity() {
                 ) {
                     Scaffold(
                         topBar = {
-                            CenterAlignedTopAppBar(title = { Text(tabs[selected].longName) }, navigationIcon = {
-                                IconButton(onClick = {
-                                    drawerState.apply {
-                                        scope.launch { if(isOpen) close() else open() }
-                                    }
-                                }){ Icon(Icons.Filled.Menu, "Navigation Drawer") }
-                            })
+                            CenterAlignedTopAppBar(
+                                title = { Text(tabs[selected].longName) },
+                                navigationIcon = {
+                                    IconButton(onClick = {
+                                        drawerState.apply {
+                                            scope.launch { if (isOpen) close() else open() }
+                                        }
+                                    }) { Icon(Icons.Filled.Menu, "Navigation Drawer") }
+                                })
 
                         }
-                    ) { p -> NavView(Modifier.padding(p), nav) }
+                    ) { p ->  NavView(Modifier.padding(p), nav) }
                 }
 
             }

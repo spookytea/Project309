@@ -2,6 +2,8 @@ package com.example.project309
 
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.LocalActivity
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -12,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -28,11 +31,12 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 @Composable
 fun AnimalView(modifier: Modifier = Modifier, art: String, name: String = "", color: Color = Color.Black) {
     var size by remember { mutableStateOf(10.em) } // Stupidly large to be scaled down later
-    var invisible by remember { mutableStateOf(true) } //Hides text until scaled correctly
+    var invisible by rememberSaveable { mutableStateOf(true) } //Hides text until scaled correctly
+    val alpha by animateFloatAsState(if(invisible) 0f else 1.0f, tween(500))
     OutlinedCard(modifier.fillMaxWidth().padding(20.dp)) {
         Text(
             text = art,
-            modifier = modifier.fillMaxSize().wrapContentSize().alpha(if (invisible) 0f else 1.0f),
+            modifier = modifier.fillMaxSize().wrapContentSize().alpha(alpha),
             style = TextStyle(fontSize = size),
             fontFamily = FontFamily.Monospace,
             maxLines = art.count{it == '\n'} + 1, //Makes sure lines are not split

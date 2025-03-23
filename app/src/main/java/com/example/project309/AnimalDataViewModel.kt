@@ -11,6 +11,7 @@ class AnimalDataViewModel(private val app: Application) : AndroidViewModel(app){
     var animal by mutableStateOf(AnimalDataModel())
         private set
 
+
     init {
 //        val f = File(app.applicationContext.filesDir, "animal.json")
 //        if(f.exists()) animal = Json.decodeFromString(f.readText())
