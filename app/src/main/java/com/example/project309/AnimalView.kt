@@ -49,12 +49,9 @@ fun AnimalView(modifier: Modifier = Modifier, art: String, name: String = "", co
             //Scales down font size to  fit space
 
         )
-        if(name != "")
+        if(name.isNotBlank())
             Text(name, Modifier.fillMaxWidth().padding(bottom = 10.dp), textAlign = TextAlign.Center)
     }
-
-
-
 }
 
 @Composable

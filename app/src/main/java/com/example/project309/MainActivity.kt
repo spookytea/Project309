@@ -33,12 +33,14 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.project309.ui.theme.Project309Theme
 import kotlinx.coroutines.launch
+import java.io.File
 
 class MainActivity : ComponentActivity() {
 
@@ -70,63 +72,73 @@ class MainActivity : ComponentActivity() {
     private val viewModel by viewModels<AnimalDataViewModel>()
 
 
-    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+
         setContent {
+            val jsonExists = File(LocalContext.current.filesDir, "animal.json").exists()
+            var showDialog by rememberSaveable { mutableStateOf(!jsonExists) }
 
-
-
-
-
-            val nav = rememberNavController()
-
-            var selected by remember { mutableIntStateOf(0) }
-            val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
-            val scope = rememberCoroutineScope()
-            var showDialog by rememberSaveable { mutableStateOf(true) }
-            if(showDialog) AddAnAnimalView { showDialog = false }
-            else Project309Theme {
-                ModalNavigationDrawer(
-                    drawerState = drawerState,
-                    drawerContent = {
-                        ModalDrawerSheet {
-                            tabs.forEachIndexed { index, t ->
-                                NavigationDrawerItem(
-                                    label = { Text(t.name) },
-                                    icon = { Icon(t.icon, t.name) },
-                                    selected = selected == index,
-                                    onClick = {
-                                        selected = index
-                                        nav.navigate(t.name)
-                                        scope.launch { drawerState.close() }
-                                    }
-                                )
-                            }
-                        }
-                    }
-                ) {
-                    Scaffold(
-                        topBar = {
-                            CenterAlignedTopAppBar(
-                                title = { Text(tabs[selected].longName) },
-                                navigationIcon = {
-                                    IconButton(onClick = {
-                                        drawerState.apply {
-                                            scope.launch { if (isOpen) close() else open() }
-                                        }
-                                    }) { Icon(Icons.Filled.Menu, "Navigation Drawer") }
-                                })
-
-                        }
-                    ) { p ->  NavView(Modifier.padding(p), nav) }
+            Project309Theme {
+                if(showDialog) AddAnAnimalView { showDialog = false }
+                else {
+                    viewModel.Load()
+                    MainView()
                 }
 
             }
 
         }
     }
+
+
+
+
+
+    @OptIn(ExperimentalMaterial3Api::class)
+    @Composable
+    private fun MainView(){
+        val nav = rememberNavController()
+        var selected by remember { mutableIntStateOf(0) }
+        val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+        val scope = rememberCoroutineScope()
+        ModalNavigationDrawer(
+            drawerState = drawerState,
+            drawerContent = {
+                ModalDrawerSheet {
+                    tabs.forEachIndexed { index, t ->
+                        NavigationDrawerItem(
+                            label = { Text(t.name) },
+                            icon = { Icon(t.icon, t.name) },
+                            selected = selected == index,
+                            onClick = {
+                                selected = index
+                                nav.navigate(t.name)
+                                scope.launch { drawerState.close() }
+                            }
+                        )
+                    }
+                }
+            }
+        ) {
+            Scaffold(topBar = {
+                CenterAlignedTopAppBar(
+                    title = { Text(tabs[selected].longName) },
+                    navigationIcon = {
+                        IconButton(onClick = {
+                            drawerState.apply {
+                                scope.launch{ if (isOpen) close() else open() }
+                            }
+                        }) { Icon(Icons.Filled.Menu, "Navigation Drawer") }
+                    }
+                )
+            }) { p ->  NavView(Modifier.padding(p), nav) }
+        }
+
+    }
+
 
 
     @Composable
@@ -136,18 +148,19 @@ class MainActivity : ComponentActivity() {
             startDestination = tabs[0].name,
             modifier,
         ) {
-
             composable("Stats") { StatsView() }
 
-            composable("Play") { AnimalAndIconView(arrayOf("⚾", "🎮")) }
+            composable("Play")  { AnimalAndIconView(arrayOf("⚾", "🎮")) }
 
-            composable("Feed") { AnimalAndIconView(arrayOf("\uD83C\uDF55")) }
+            composable("Feed")  { AnimalAndIconView(arrayOf("\uD83C\uDF55")) }
 
-            composable("Sleep"){ SleepView() }
+            composable("Sleep") { SleepView() }
 
         }
 
     }
 }
+
+
 
 
