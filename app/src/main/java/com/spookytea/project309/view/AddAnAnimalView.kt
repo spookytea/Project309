@@ -1,4 +1,4 @@
-package com.example.project309
+package com.spookytea.project309.view
 
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.LocalActivity
@@ -28,10 +28,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.spookytea.project309.R
+import com.spookytea.project309.viewmodel.CreatureViewModel
 
 @Composable
-fun AddAnAnimalView(dismiss: () -> Unit) {
-    val viewModel: AnimalDataViewModel = viewModel(LocalActivity.current as ComponentActivity)
+fun AddAnAnimalView() {
+    val viewModel: CreatureViewModel = viewModel(LocalActivity.current as ComponentActivity)
 
     var name by remember {mutableStateOf("")}
     val animals: Array<String> = LocalContext.current.resources.getStringArray(R.array.animals)
@@ -39,7 +41,7 @@ fun AddAnAnimalView(dismiss: () -> Unit) {
 
     var hue by remember { mutableFloatStateOf(180f) }
 
-    Dialog(dismiss) {
+    Dialog({}) {
         Card(Modifier.size(400.dp, 400.dp)) {
             Column(
                 Modifier.fillMaxSize(),
@@ -74,8 +76,7 @@ fun AddAnAnimalView(dismiss: () -> Unit) {
                 )
 
                 TextButton({
-                    viewModel.addAnimal(name, pagerState.currentPage, hue=hue)
-                    dismiss()
+                    viewModel.addCreature(name, pagerState.currentPage, hue=hue)
                 }) {
                     Text("Add Animal")
                 }

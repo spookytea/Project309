@@ -1,4 +1,4 @@
-package com.example.project309
+package com.spookytea.project309.view
 
 import android.annotation.SuppressLint
 import android.content.res.Configuration.ORIENTATION_LANDSCAPE
@@ -15,6 +15,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -23,6 +25,8 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.spookytea.project309.model.Creature
+import com.spookytea.project309.viewmodel.CreatureViewModel
 
 
 @SuppressLint("SwitchIntDef")
@@ -31,7 +35,7 @@ fun StatsView(){
 
     when(LocalConfiguration.current.orientation){
         ORIENTATION_PORTRAIT -> Column {
-            AnimalView(Modifier.weight(1.0f))
+            AnimalView(Modifier.weight(0.75f))
             StatsBars()
         }
 
@@ -50,7 +54,7 @@ fun StatsView(){
 
 @Composable
 fun StatsBars(modifier: Modifier = Modifier){
-    val viewModel: AnimalDataViewModel = viewModel(LocalActivity.current as ComponentActivity)
+    val viewModel: CreatureViewModel = viewModel(LocalActivity.current as ComponentActivity)
 
     val barColor = { num: Float ->
         when {
@@ -61,10 +65,13 @@ fun StatsBars(modifier: Modifier = Modifier){
     }
 
     Column(modifier) {
+        val index = viewModel.selectedIndex
+        val creatures by viewModel.creatures.collectAsState(listOf(Creature()))
+        val current = creatures[index]
         mapOf(
-            "Fun"    to viewModel.animal.funLevel,
-            "Hunger" to viewModel.animal.hungerLevel,
-            "Energy" to viewModel.animal.energyLevel
+            "Fun"    to current.funLevel,
+            "Hunger" to current.hungerLevel,
+            "Energy" to current.energyLevel
         ).forEach { (name, num) ->
 
             val asProgress = num.toFloat() / 100
@@ -79,7 +86,7 @@ fun StatsBars(modifier: Modifier = Modifier){
             )
             Text(
                 modifier = Modifier.padding(5.dp).fillMaxWidth(),
-                text = name,
+                text = name + "$current",
                 textAlign = TextAlign.End
             )
         }

@@ -1,4 +1,4 @@
-package com.example.project309.ui.theme
+package com.spookytea.project309.view.theme
 
 import androidx.compose.ui.graphics.Color
 

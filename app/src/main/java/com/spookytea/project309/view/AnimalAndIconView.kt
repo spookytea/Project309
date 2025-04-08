@@ -1,4 +1,4 @@
-package com.example.project309
+package com.spookytea.project309.view
 
 import android.annotation.SuppressLint
 import android.content.res.Configuration.ORIENTATION_LANDSCAPE

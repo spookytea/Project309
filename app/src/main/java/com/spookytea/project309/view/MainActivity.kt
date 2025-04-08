@@ -1,4 +1,4 @@
-package com.example.project309
+package com.spookytea.project309.view
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -24,23 +24,21 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.project309.ui.theme.Project309Theme
+import com.spookytea.project309.view.theme.Project309Theme
+import com.spookytea.project309.viewmodel.CreatureViewModel
 import kotlinx.coroutines.launch
-import java.io.File
 
 class MainActivity : ComponentActivity() {
 
@@ -69,25 +67,27 @@ class MainActivity : ComponentActivity() {
     )
 
     @Suppress("unused")
-    private val viewModel by viewModels<AnimalDataViewModel>()
+    private val viewModel by viewModels<CreatureViewModel>()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
+//        CoroutineScope(Dispatchers.IO).launch {   DB.getDB(applicationContext).clearAllTables() }
+
 
         setContent {
-            val jsonExists = File(LocalContext.current.filesDir, "animal.json").exists()
-            var showDialog by rememberSaveable { mutableStateOf(!jsonExists) }
+
+            val isEmpty by viewModel.isEmpty.collectAsState(null)
+
 
             Project309Theme {
-                if(showDialog) AddAnAnimalView { showDialog = false }
-                else {
-                    viewModel.Load()
-                    MainView()
+                when (isEmpty) {
+                    true  -> AddAnAnimalView()
+                    false -> MainView()
+                    null  ->  return@Project309Theme
                 }
-
             }
 
         }
