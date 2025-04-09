@@ -35,7 +35,12 @@ import com.spookytea.project309.viewmodel.CreatureViewModel
 
 
 @Composable
-fun AnimalView(modifier: Modifier = Modifier, art: String, name: String = "", color: Color = Color.Black) {
+fun AnimalDisplay(
+    modifier: Modifier = Modifier,
+    art: String,
+    name: String = "",
+    color: Color = Color.Black
+) {
     var size by remember { mutableStateOf(10.em) } // Stupidly large to be scaled down later
     var invisible by rememberSaveable { mutableStateOf(true) } //Hides text until scaled correctly
     val alpha by animateFloatAsState(if(invisible) 0f else 1.0f, tween(500))
@@ -61,13 +66,11 @@ fun AnimalView(modifier: Modifier = Modifier, art: String, name: String = "", co
                 Text(name, Modifier.fillMaxWidth().padding(bottom = 10.dp), textAlign = TextAlign.Center)
 
         }
-
     }
-
 }
 
 @Composable
-fun AnimalView(modifier: Modifier = Modifier){
+fun AnimalDisplay(modifier: Modifier = Modifier){
     val viewModel: CreatureViewModel = viewModel(LocalActivity.current as ComponentActivity)
     val pageCount by viewModel.creatureCount.collectAsState(0)
     val pagerState = rememberPagerState { pageCount }
@@ -82,20 +85,13 @@ fun AnimalView(modifier: Modifier = Modifier){
         
         val toDisplay = creatures[index]
         
-        AnimalView(
+        AnimalDisplay(
             modifier,
             viewModel.getArt(toDisplay),
             toDisplay.name,
             Color.hsv(toDisplay.hue, 1.0f, 1.0f)
         )
     }
-
-
-
-
-
-
-
 }
 
 

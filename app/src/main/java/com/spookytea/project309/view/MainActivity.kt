@@ -5,14 +5,16 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.CallMade
+import androidx.compose.material.icons.automirrored.filled.CallReceived
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.outlined.Bed
-import androidx.compose.material.icons.outlined.HealthAndSafety
-import androidx.compose.material.icons.outlined.RamenDining
-import androidx.compose.material.icons.outlined.SportsEsports
+import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -20,6 +22,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.NavigationDrawerItem
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
@@ -31,8 +34,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.navigation.NavHostController
+import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -42,31 +44,8 @@ import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
 
-    private data class NavItem(val name: String, val longName: String, val icon: ImageVector)
-    private val tabs = arrayOf(
-        NavItem(
-            name     = "Stats",
-            longName = "Pet Statistics",
-            icon     = Icons.Outlined.HealthAndSafety
-        ),
-        NavItem(
-            name     = "Play",
-            longName = "Play with Your Pet",
-            icon     = Icons.Outlined.SportsEsports
-        ),
-        NavItem(
-            name     = "Feed",
-            longName = "Feed Your Pet",
-            icon     = Icons.Outlined.RamenDining
-        ),
-        NavItem(
-            name     = "Sleep",
-            longName = "Send your pet to sleep",
-            icon     = Icons.Outlined.Bed
-        )
-    )
+    private val tabs = arrayOf(StatsView(), SleepView(), EatView(), PlayView())
 
-    @Suppress("unused")
     private val viewModel by viewModels<CreatureViewModel>()
 
 
@@ -84,7 +63,7 @@ class MainActivity : ComponentActivity() {
 
             Project309Theme {
                 when (isEmpty) {
-                    true  -> AddAnAnimalView()
+                    true  -> AddAnAnimalDialog()
                     false -> MainView()
                     null  ->  return@Project309Theme
                 }
@@ -93,17 +72,41 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    @Composable
+    private fun TradeButtons(){
+
+
+        Row(Modifier.padding(20.dp)) {
+            Button(
+                modifier = Modifier.weight(0.5f),
+                onClick = {},
+                shape = RoundedCornerShape(topStart = 20.dp, bottomStart = 20.dp),
+            ) {
+                Icon(Icons.AutoMirrored.Filled.CallMade, "Send")
+                Text("Send")
+            }
+            OutlinedButton(
+                {},
+                Modifier.weight(0.5f),
+                shape = RoundedCornerShape(topEnd = 20.dp, bottomEnd = 20.dp)
+            ) {
+                Icon(Icons.AutoMirrored.Filled.CallReceived, "Receive")
+                Text("Receive")
+            }
+        }
+
+
+    }
 
 
 
-
-    @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     private fun MainView(){
         val nav = rememberNavController()
         var selected by remember { mutableIntStateOf(0) }
         val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
         val scope = rememberCoroutineScope()
+
         ModalNavigationDrawer(
             drawerState = drawerState,
             drawerContent = {
@@ -120,43 +123,40 @@ class MainActivity : ComponentActivity() {
                             }
                         )
                     }
+                    TradeButtons()
                 }
             }
         ) {
-            Scaffold(topBar = {
-                CenterAlignedTopAppBar(
-                    title = { Text(tabs[selected].longName) },
-                    navigationIcon = {
-                        IconButton(onClick = {
-                            drawerState.apply {
-                                scope.launch{ if (isOpen) close() else open() }
-                            }
-                        }) { Icon(Icons.Filled.Menu, "Navigation Drawer") }
+            Scaffold(topBar = { TopBar(selected, drawerState) }) { p ->
+                NavHost(
+                    nav,
+                    startDestination = tabs[0].name,
+                    Modifier.padding(p),
+                ) {
+                    tabs.forEach {
+                        tab -> composable(tab.name) { tab.Show() }
                     }
-                )
-            }) { p ->  NavView(Modifier.padding(p), nav) }
+                }
+            }
         }
 
     }
 
 
-
+    @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    private fun NavView(modifier: Modifier = Modifier, nav: NavHostController){
-        NavHost(
-            nav,
-            startDestination = tabs[0].name,
-            modifier,
-        ) {
-            composable("Stats") { StatsView() }
-
-            composable("Play")  { AnimalAndIconView(arrayOf("⚾", "🎮")) }
-
-            composable("Feed")  { AnimalAndIconView(arrayOf("\uD83C\uDF55")) }
-
-            composable("Sleep") { SleepView() }
-
-        }
+    private fun TopBar(selected: Int, drawerState: DrawerState){
+        val scope = rememberCoroutineScope()
+        CenterAlignedTopAppBar(
+            title = { Text(tabs[selected].longName) },
+            navigationIcon = {
+                IconButton(onClick = {
+                    drawerState.apply {
+                        scope.launch{ if (isOpen) close() else open() }
+                    }
+                }) { Icon(Icons.Filled.Menu, "Navigation Drawer") }
+            }
+        )
 
     }
 }

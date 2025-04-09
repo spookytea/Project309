@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.HealthAndSafety
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,71 +30,73 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.spookytea.project309.model.Creature
 import com.spookytea.project309.viewmodel.CreatureViewModel
 
+class StatsView : ViewBase(
+    "Stats",
+    "Pet Statistics",
+    Icons.Outlined.HealthAndSafety
+){
+    @SuppressLint("SwitchIntDef")
+    @Composable
+    override fun Show() {
+        // Handles Rotation
+        when (LocalConfiguration.current.orientation) {
+            ORIENTATION_PORTRAIT -> Column {
+                AnimalDisplay(Modifier.weight(0.75f))
+                StatsBars()
+            }
 
-@SuppressLint("SwitchIntDef")
-@Composable
-fun StatsView(){
+            ORIENTATION_LANDSCAPE -> Row {
+                AnimalDisplay(Modifier.weight(0.25f))
+                StatsBars(Modifier.weight(0.75f).align(Alignment.CenterVertically))
+            }
 
-    when(LocalConfiguration.current.orientation){
-        ORIENTATION_PORTRAIT -> Column {
-            AnimalView(Modifier.weight(0.75f))
-            StatsBars()
-        }
-
-        ORIENTATION_LANDSCAPE -> Row {
-            AnimalView(Modifier.weight(0.25f))
-            StatsBars(Modifier.weight(0.75f).align(Alignment.CenterVertically))
-        }
-
-        ORIENTATION_UNDEFINED -> {
-            Text("Unknown Orientation")
-        }
-    }
-
-}
-
-
-@Composable
-fun StatsBars(modifier: Modifier = Modifier){
-    val viewModel: CreatureViewModel = viewModel(LocalActivity.current as ComponentActivity)
-
-    val barColor = { num: Float ->
-        when {
-            num < 0.4f -> Color.Red
-            num < 0.7f -> Color.Yellow
-            else -> Color.Green
-        }
-    }
-
-    Column(modifier) {
-        val index = viewModel.selectedIndex
-        val creatures by viewModel.creatures.collectAsState(listOf(Creature()))
-        val current = creatures[index]
-        mapOf(
-            "Fun"    to current.funLevel,
-            "Hunger" to current.hungerLevel,
-            "Energy" to current.energyLevel
-        ).forEach { (name, num) ->
-
-            val asProgress = num.toFloat() / 100
-
-            LinearProgressIndicator(
-                modifier = Modifier.padding(5.dp)
-                                   .height(30.dp)
-                                   .fillMaxWidth()
-                                   .clip(RoundedCornerShape(10.dp)),
-                progress = { asProgress },
-                color = barColor(asProgress)
-            )
-            Text(
-                modifier = Modifier.padding(5.dp).fillMaxWidth(),
-                text = name + "$current",
-                textAlign = TextAlign.End
-            )
+            ORIENTATION_UNDEFINED -> {
+                Text("Unknown Orientation")
+            }
         }
 
     }
 
 
+    @Composable
+    fun StatsBars(modifier: Modifier = Modifier) {
+        val viewModel: CreatureViewModel = viewModel(LocalActivity.current as ComponentActivity)
 
+        //Changes bar colour based on number bar represents
+
+        Column(modifier) {
+            val creatures by viewModel.creatures.collectAsState(listOf(Creature()))
+            val current = creatures[viewModel.selectedIndex]
+            mapOf(
+                "Fun" to current.funLevel,
+                "Hunger" to current.hungerLevel,
+                "Energy" to current.energyLevel
+            ).forEach { (name, num) ->
+
+                //Score stored out of 100 instead of as decimal
+                val asProgress = num.toFloat() / 100
+
+                LinearProgressIndicator(
+                    modifier = Modifier.padding(5.dp)
+                        .height(30.dp)
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(10.dp)),
+                    progress = { asProgress },
+                    color = when {
+                        asProgress < 0.4f -> Color.Red
+                        asProgress < 0.7f -> Color.Yellow
+                        else -> Color.Green
+                    }
+                )
+                Text(
+                    modifier = Modifier.padding(5.dp).fillMaxWidth(),
+                    text = name,
+                    textAlign = TextAlign.End
+                )
+            }
+
+        }
+
+
+    }
 }

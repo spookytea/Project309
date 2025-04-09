@@ -32,7 +32,7 @@ import com.spookytea.project309.R
 import com.spookytea.project309.viewmodel.CreatureViewModel
 
 @Composable
-fun AddAnAnimalView() {
+fun AddAnAnimalDialog() {
     val viewModel: CreatureViewModel = viewModel(LocalActivity.current as ComponentActivity)
 
     var name by remember {mutableStateOf("")}
@@ -53,7 +53,7 @@ fun AddAnAnimalView() {
                     modifier = Modifier.weight(0.75f),
                     beyondViewportPageCount = 1
                 ) {
-                    AnimalView(Modifier.fillMaxSize(), animals[it], color = Color.hsv(hue, 1f,1f))
+                    AnimalDisplay(Modifier.fillMaxSize(), animals[it], color = Color.hsv(hue, 1f,1f))
                 }
 
                 val col = Color.hsv(hue, 1f,1f)
