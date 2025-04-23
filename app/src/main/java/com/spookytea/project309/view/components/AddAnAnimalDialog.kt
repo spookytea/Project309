@@ -1,4 +1,4 @@
-package com.spookytea.project309.view
+package com.spookytea.project309.view.components
 
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.LocalActivity
@@ -29,11 +29,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.spookytea.project309.R
-import com.spookytea.project309.viewmodel.CreatureViewModel
+import com.spookytea.project309.viewmodel.MainViewModel
 
 @Composable
 fun AddAnAnimalDialog() {
-    val viewModel: CreatureViewModel = viewModel(LocalActivity.current as ComponentActivity)
+    val viewModel: MainViewModel = viewModel(LocalActivity.current as ComponentActivity)
 
     var name by remember {mutableStateOf("")}
     val animals: Array<String> = LocalContext.current.resources.getStringArray(R.array.animals)

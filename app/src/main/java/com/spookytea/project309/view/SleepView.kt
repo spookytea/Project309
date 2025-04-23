@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import android.content.res.Configuration.ORIENTATION_LANDSCAPE
 import android.content.res.Configuration.ORIENTATION_PORTRAIT
 import android.content.res.Configuration.ORIENTATION_UNDEFINED
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,6 +21,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.spookytea.project309.view.components.AnimalDisplay
+import com.spookytea.project309.viewmodel.MainViewModel
 
 class SleepView : ViewBase(
     "Sleep",
@@ -28,25 +33,24 @@ class SleepView : ViewBase(
     @SuppressLint("SwitchIntDef")
     @Composable
     override fun Show() {
-
-
+        val vm: MainViewModel = viewModel(LocalActivity.current as ComponentActivity)
         when (LocalConfiguration.current.orientation) {
             ORIENTATION_PORTRAIT -> Column {
-                AnimalDisplay(Modifier.weight(1.0f))
+                AnimalDisplay(pager, Modifier.weight(1.0f))
                 Button(
-                    onClick = {},
+                    onClick = { onClick(vm) },
                     Modifier.align(Alignment.CenterHorizontally)
                         .padding(bottom = 5.dp)
                         .width(200.dp)
                 ) {
-                    Text("Sleep")
+                    Text(name)
                 }
             }
 
             ORIENTATION_LANDSCAPE -> Row {
-                AnimalDisplay(Modifier.weight(0.75f))
+                AnimalDisplay(pager, Modifier.weight(0.75f))
                 Button(
-                    onClick = {},
+                    onClick = { onClick(vm) },
                     shape = RoundedCornerShape(10.dp),
                     modifier = Modifier.weight(0.25f)
                         .fillMaxSize()
@@ -58,16 +62,16 @@ class SleepView : ViewBase(
                             bottom = 25.dp
                         )
                 ) {
-                    Text("Sleep")
+                    Text(name)
                 }
             }
 
             ORIENTATION_UNDEFINED -> {
                 Text("Unknown Orientation")
             }
-
         }
-
-
+    }
+    fun onClick(viewModel: MainViewModel) {
+        viewModel.sleep()
     }
 }

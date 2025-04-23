@@ -1,16 +1,20 @@
-package com.spookytea.project309.view
+package com.spookytea.project309.view.components
 
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.LocalActivity
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.pager.PagerState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.NightsStay
+import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,6 +24,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
@@ -30,8 +35,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.spookytea.project309.model.Creature
-import com.spookytea.project309.viewmodel.CreatureViewModel
+import com.spookytea.project309.viewmodel.MainViewModel
 
 
 @Composable
@@ -70,28 +74,51 @@ fun AnimalDisplay(
 }
 
 @Composable
-fun AnimalDisplay(modifier: Modifier = Modifier){
-    val viewModel: CreatureViewModel = viewModel(LocalActivity.current as ComponentActivity)
-    val pageCount by viewModel.creatureCount.collectAsState(0)
-    val pagerState = rememberPagerState { pageCount }
-    val creatures by viewModel.creatures.collectAsState(listOf(Creature()))
+fun AnimalDisplay(
+    pagerState: PagerState,
+    modifier: Modifier = Modifier,
+    viewModel: MainViewModel = viewModel(LocalActivity.current as ComponentActivity)
+){
+    val creatures by viewModel.creatures.collectAsState(listOf())
 
 
 
-    HorizontalPager(pagerState, modifier.fillMaxWidth()) { page ->
+    HorizontalPager(pagerState, modifier.fillMaxWidth(), beyondViewportPageCount = 1) { page ->
         viewModel.selectedIndex = page
 
-        val index = viewModel.selectedIndex
-        
-        val toDisplay = creatures[index]
-        
-        AnimalDisplay(
-            modifier,
-            viewModel.getArt(toDisplay),
-            toDisplay.name,
-            Color.hsv(toDisplay.hue, 1.0f, 1.0f)
-        )
+
+
+        if(creatures.isNotEmpty()) {
+            val toDisplay = creatures[page]
+
+            if(!viewModel.is_asleep(toDisplay)) {
+
+                AnimalDisplay(
+                    modifier,
+                    viewModel.getArt(toDisplay),
+                    toDisplay.name,
+                    Color.hsv(toDisplay.hue, 1.0f, 1.0f)
+                )
+            } else {
+                OutlinedCard(modifier.fillMaxSize().padding(20.dp)){
+                    Column(modifier.fillMaxSize(), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
+                        Icon(Icons.Filled.NightsStay, "Asleep Icon")
+                        Text("${toDisplay.name} is asleep")
+                    }
+
+                }
+
+
+            }
+        }
     }
+
 }
+
+
+
+
+
+
 
 
