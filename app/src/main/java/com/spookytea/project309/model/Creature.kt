@@ -14,7 +14,7 @@ import kotlinx.serialization.Transient
 @Entity(tableName = "creatures")
 @Serializable
 data class Creature(
-    @PrimaryKey(true) val id: Int = 0,
+    @Transient @PrimaryKey(true) val id: Int = 0,
     val energyLevel: Int = 100,
     val hungerLevel: Int = 100,
     val funLevel: Int = 100,

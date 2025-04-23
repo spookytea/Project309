@@ -62,7 +62,7 @@ class MainActivity : ComponentActivity() {
             Project309Theme {
                 when (isEmpty) {
                     true  -> AddAnAnimalDialog()
-                    false -> MainView().Show(tabs.toTypedArray())
+                    false -> MainView().Show(tabs)
                     null  -> return@Project309Theme
                 }
             }

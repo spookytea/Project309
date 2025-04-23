@@ -1,77 +1,54 @@
 package com.spookytea.project309.view
 
 import android.annotation.SuppressLint
-import android.content.res.Configuration.ORIENTATION_LANDSCAPE
-import android.content.res.Configuration.ORIENTATION_PORTRAIT
-import android.content.res.Configuration.ORIENTATION_UNDEFINED
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.LocalActivity
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Bedtime
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.spookytea.project309.view.components.AnimalDisplay
 import com.spookytea.project309.viewmodel.MainViewModel
 
-class SleepView : ViewBase(
+class SleepView : PagerView(
+    1.0f,
+    0.9f,
     "Sleep",
     "Send your pet to sleep",
     Icons.Outlined.Bedtime
 ) {
-    @SuppressLint("SwitchIntDef")
     @Composable
-    override fun Show() {
+    @SuppressLint("SwitchIntDef")
+    override fun AdditionalContent(page: Int, modifier: Modifier) {
         val vm: MainViewModel = viewModel(LocalActivity.current as ComponentActivity)
-        when (LocalConfiguration.current.orientation) {
-            ORIENTATION_PORTRAIT -> Column {
-                AnimalDisplay(pager, Modifier.weight(1.0f))
-                Button(
-                    onClick = { onClick(vm) },
-                    Modifier.align(Alignment.CenterHorizontally)
-                        .padding(bottom = 5.dp)
-                        .width(200.dp)
-                ) {
-                    Text(name)
-                }
-            }
+        val creatures by vm.creatures.collectAsState(listOf())
+        if(creatures.isEmpty()) return
+        val current = creatures[page]
 
-            ORIENTATION_LANDSCAPE -> Row {
-                AnimalDisplay(pager, Modifier.weight(0.75f))
-                Button(
-                    onClick = { onClick(vm) },
-                    shape = RoundedCornerShape(10.dp),
-                    modifier = Modifier.weight(0.25f)
-                        .fillMaxSize()
-                        .align(Alignment.CenterVertically)
-                        .padding(
-                            start = 0.dp,
-                            end = 25.dp,
-                            top = 25.dp,
-                            bottom = 25.dp
-                        )
-                ) {
-                    Text(name)
-                }
-            }
-
-            ORIENTATION_UNDEFINED -> {
-                Text("Unknown Orientation")
-            }
+        Button(
+            onClick = { vm.sleep(current) },
+            shape = if(landscape) RoundedCornerShape(10.dp) else RoundedCornerShape(20.dp),
+            modifier = if(landscape) Modifier.padding(vertical = 20.dp)
+                                             .padding(end=20.dp)
+                                             .fillMaxHeight()
+                       else Modifier.padding(bottom=20.dp)
+                                   .padding(horizontal = 50.dp)
+                                   .fillMaxWidth(),
+            enabled = !vm.isAsleep(current)
+        ) {
+            Text(name)
         }
-    }
-    fun onClick(viewModel: MainViewModel) {
-        viewModel.sleep()
+
+
+
     }
 }
