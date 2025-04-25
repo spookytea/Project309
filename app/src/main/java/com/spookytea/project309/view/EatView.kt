@@ -5,10 +5,7 @@ import androidx.activity.compose.LocalActivity
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.RamenDining
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draganddrop.DragAndDropEvent
 import androidx.compose.ui.draganddrop.DragAndDropTarget
@@ -27,19 +24,19 @@ class EatView : AnimalDragDropViewBase(
         val viewModel: MainViewModel = viewModel(LocalActivity.current as ComponentActivity)
 
 
-        var clipData: String? by remember { mutableStateOf(null) }
-        dropCallBack = remember {
+        dropCallBack = remember { //Callback to handle when something dropped
+            //  Drag and drop | Jetpack Compose (no date) Android Developers. Available at: https://developer.android.com/develop/ui/compose/touch-input/user-interactions/drag-and-drop.
             object : DragAndDropTarget {
 
                 var index = 0
 
-                override fun onEnded(event: DragAndDropEvent) {
-                    viewModel.upHunger(index)
-                }
+
+                override fun onEnded(event: DragAndDropEvent) { viewModel.upHunger(index) }
+
                 override fun onDrop(event: DragAndDropEvent): Boolean {
 
-                    clipData = event.toAndroidDragEvent().clipData.getItemAt(0).text.toString()
-                    index = emojis.indexOf(clipData)
+                    val clipData = event.toAndroidDragEvent().clipData.getItemAt(0).text.toString()
+                    index = emojis.indexOf(clipData) //gets emoji dropped
                     return true
                 }
             }

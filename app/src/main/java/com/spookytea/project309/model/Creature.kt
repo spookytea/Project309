@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 
-
+//Stored in Room but able to be sent as SMS in encrypted JSON format
 @Entity(tableName = "creatures")
 @Serializable
 data class Creature(

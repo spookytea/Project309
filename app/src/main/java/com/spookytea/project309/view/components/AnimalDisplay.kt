@@ -38,6 +38,8 @@ import com.spookytea.project309.viewmodel.MainViewModel
 import com.spookytea.project309.viewmodel.PagerViewModel
 
 
+
+//Actual code to display the animal
 @Composable
 fun AnimalDisplay(
     modifier: Modifier = Modifier,
@@ -47,7 +49,7 @@ fun AnimalDisplay(
 ) {
     var size by remember { mutableStateOf(10.em) } // Stupidly large to be scaled down later
     var invisible by remember { mutableStateOf(true) } //Hides text until scaled correctly
-    val alpha by animateFloatAsState(if(invisible) 0f else 1.0f, tween(500))
+    val alpha by animateFloatAsState(if(invisible) 0f else 1.0f, tween(500))//Animated fade
 
     OutlinedCard(modifier.fillMaxWidth().padding(20.dp)) {
         Column {
@@ -60,7 +62,7 @@ fun AnimalDisplay(
                 maxLines = art.count{it == '\n'} + 1, //Makes sure lines are not split
                 onTextLayout = { tL ->
                     invisible = tL.didOverflowHeight || tL.didOverflowWidth
-                    if(invisible) size *= 0.9F
+                    if(invisible) size *= 0.9F //Sizes down and hides until correct
                 },
                 color = color,
                 fontWeight = FontWeight.ExtraBold
@@ -75,7 +77,7 @@ fun AnimalDisplay(
 }
 
 @Composable
-fun AnimalDisplay(
+fun AnimalDisplay( //Used by send dialog to show from viewmodel without sleeping
     pagerState: PagerState,
     modifier: Modifier = Modifier,
     viewModel: PagerViewModel = viewModel<MainViewModel>(LocalActivity.current as ComponentActivity)
@@ -84,7 +86,7 @@ fun AnimalDisplay(
 
 
 
-    HorizontalPager(pagerState, modifier.fillMaxWidth(), beyondViewportPageCount = 1) { page ->
+    HorizontalPager(pagerState, modifier.fillMaxWidth()) { page ->
         viewModel.selectedIndex = page
 
 

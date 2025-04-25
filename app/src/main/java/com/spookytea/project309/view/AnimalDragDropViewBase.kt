@@ -28,12 +28,13 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.spookytea.project309.viewmodel.MainViewModel
 
+//Base class to hold shared drag and drop data for eating + playing
 abstract class AnimalDragDropViewBase(
     protected val emojis: Array<String>,
     name: String,
     longName: String,
     icon: ImageVector
-) : PagerView(1.0f, 0.8f, name, longName, icon) {
+) : ViewBase(1.0f, 0.8f, name, longName, icon) {
 
 
     @SuppressLint("SwitchIntDef")
@@ -55,7 +56,7 @@ abstract class AnimalDragDropViewBase(
             ) { GetEmojis(emojis, viewModel.isAsleep(current)) }
 
 
-            ORIENTATION_LANDSCAPE -> FlowRow(Modifier.padding(end=20.dp)) {
+            ORIENTATION_LANDSCAPE -> FlowRow(Modifier.padding(end=20.dp)) { //Overflowing row in case items don't fit
                 GetEmojis(emojis, viewModel.isAsleep(current))
             }
 
@@ -65,13 +66,14 @@ abstract class AnimalDragDropViewBase(
 
     @OptIn(ExperimentalFoundationApi::class)
     @Composable
-    fun GetEmojis(emojis: Array<String>, isAsleep: Boolean) {
+    private fun GetEmojis(emojis: Array<String>, isAsleep: Boolean) {
 
 
         emojis.forEach { emoji ->
 
+            //Change display and prevent usage of emojis when asleep
             val mod = if(isAsleep) Modifier.alpha(0.5f) else Modifier.dragAndDropSource {
-                detectTapGestures(onPress = {
+                detectTapGestures(onPress = { //Handles sending data via drag and drop
                     startTransfer(
                         DragAndDropTransferData(
                             clipData = ClipData.newPlainText("emoji", emoji)

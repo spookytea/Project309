@@ -50,13 +50,26 @@ import com.spookytea.project309.view.components.SendDialog
 import com.spookytea.project309.viewmodel.MainViewModel
 import kotlinx.coroutines.launch
 
+//Handles navigation and scaffold for application
 class MainView {
+
+    //Get started with Jetpack Compose (no date) Android Developers. Available at: https://developer.android.com/develop/ui/compose/documentation.
+    //Material Design (no date) Material Design. Available at: https://m3.material.io.
+    //Material Symbols and Icons (no date) Google Fonts. Available at: https://fonts.google.com/icons.
+    //Docs used throughout for knowing which GUI elements and icons to use.
 
 
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    fun Show(tabs: List<PagerView>){
+    fun Show(){
+
+        val tabs = arrayOf(
+            StatsView(),
+            SleepView(),
+            EatView(),
+            PlayView()
+        )
 
 
 
@@ -70,6 +83,7 @@ class MainView {
             drawerState = drawerState,
             drawerContent = {
                 ModalDrawerSheet {
+                    //Generates navigation links for all views in array
                     tabs.forEachIndexed { index, t ->
                         NavigationDrawerItem(
                             label = { Text(t.name) },
@@ -82,7 +96,7 @@ class MainView {
                             }
                         )
                     }
-
+                    //Defined later: shows buttons for sending and receiving creatures with SMS
                     SMSButtons()
                 }
             }
@@ -102,8 +116,11 @@ class MainView {
                 val pageCount by viewModel.creatureCount.collectAsState(0)
                 val pager = rememberPagerState(initialPage = viewModel.selectedIndex) { pageCount }
 
+                //Vasava, K. (2024) ‘Navigation in Jetpack compose. Full guide Beginner to Advanced.’, Medium, 2 April. Available at: https://medium.com/@KaushalVasava/navigation-in-jetpack-compose-full-guide-beginner-to-advanced-950c1133740.
                 NavHost(nav, startDestination = tabs[0].name, Modifier.padding(p)) {
                     tabs.forEach { tab ->
+                        //Makes a view and passes a shared pager state for each tab so state is preserved across view switches
+                        //Routing done using strings as I found this simpler and args weren't needed to be passed
                         tab.pager = pager
                         composable(tab.name) { tab.Show() }
                     }
@@ -113,19 +130,17 @@ class MainView {
 
     }
 
-    private enum class SMSDialog{ None, Send, Import }
+    private enum class SMSDialog{ None, Send, Import } //enum to decide which dialog to show
 
     @Composable
     private fun SMSButtons() {
         var showTrading by rememberSaveable {  mutableStateOf(false) }
-
         showTrading = checkSelfPermission(LocalContext.current, SEND_SMS) == PackageManager.PERMISSION_GRANTED
-
-        if(!showTrading) return
+        if(!showTrading) return //Hides buttons if no SMS permission
 
         var showDialog by rememberSaveable { mutableStateOf(SMSDialog.None) }
         Column {
-            Spacer(Modifier.weight(0.9f))
+            Spacer(Modifier.weight(0.9f)) //Pushes buttons to bottom
             Row(Modifier
                 .fillMaxWidth()
                 .padding(bottom = 0.dp, end = 50.dp, start = 50.dp)) {

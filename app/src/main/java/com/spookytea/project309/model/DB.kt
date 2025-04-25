@@ -11,6 +11,7 @@ abstract class DB : RoomDatabase() {
     abstract fun creatureDao() : CreatureDao
 
     companion object {
+        //Ensures only one database instance as they are computationally expensive
         @Volatile
         private var db: DB? = null
         fun getDB(context: Context): DB {

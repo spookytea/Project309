@@ -37,6 +37,7 @@ fun AddAnAnimalDialog() {
     val viewModel: MainViewModel = viewModel(LocalActivity.current as ComponentActivity)
 
     var name by remember {mutableStateOf("")}
+    //animal presets stored as string resources
     val animals: Array<String> = LocalContext.current.resources.getStringArray(R.array.animals)
     val pagerState = rememberPagerState(pageCount = {animals.count()})
 
@@ -51,14 +52,13 @@ fun AddAnAnimalDialog() {
             ) {
                 HorizontalPager(
                     pagerState,
-                    modifier = Modifier.weight(0.75f),
-                    beyondViewportPageCount = 1
-                ) {
+                    modifier = Modifier.weight(0.75f)
+                ) { //Shows all available animals
                     AnimalDisplay(Modifier.fillMaxSize(), animals[it], color = Color.hsv(hue, 1f,1f))
                 }
 
                 val col = Color.hsv(hue, 1f,1f)
-                Slider(
+                Slider( //Hue slider for selecting colour
                     modifier = Modifier.padding(start=20.dp, end=20.dp),
                     value = hue,
                     valueRange = 0f..360f,

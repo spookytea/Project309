@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.spookytea.project309.viewmodel.MainViewModel
 
-class StatsView : PagerView(
+class StatsView : ViewBase(
     0.75f,
     0.35f,
     "Stats",

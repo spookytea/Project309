@@ -28,7 +28,8 @@ class PlayView : AnimalDragDropViewBase(
         val viewModel: MainViewModel = viewModel(LocalActivity.current as ComponentActivity)
 
         var clipData: String? by remember { mutableStateOf(null) }
-        dropCallBack = remember {
+        dropCallBack = remember { //callback for when dropped
+            // Drag and drop | Jetpack Compose (no date) Android Developers. Available at: https://developer.android.com/develop/ui/compose/touch-input/user-interactions/drag-and-drop.
             object : DragAndDropTarget {
 
                 var index: Int = 0
@@ -36,16 +37,20 @@ class PlayView : AnimalDragDropViewBase(
                 var job: Job? = null
 
                 override fun onEntered(event: DragAndDropEvent) {
+                    //Stores co-routine job for cancelling later.
+                    // Checks if null first to avoid multiple jobs starting if multiple events fired
+                    // Ups fun continuously until no longer hovering
                     if(job == null) job = viewModel.startPlay(index)
                 }
 
                 override fun onExited(event: DragAndDropEvent) {
+                    //cancels and resets when exited to stop upping fun
                     job!!.cancel()
                     job = null
                 }
 
                 override fun onDrop(event: DragAndDropEvent): Boolean {
-
+                    //Gets emoji dropped
                     clipData = event.toAndroidDragEvent().clipData.getItemAt(0).text.toString()
                     index = emojis.indexOf(clipData)
 

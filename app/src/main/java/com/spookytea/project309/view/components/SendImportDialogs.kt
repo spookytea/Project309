@@ -25,6 +25,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.spookytea.project309.viewmodel.SMSViewModel
 import kotlinx.serialization.SerializationException
 
+
+//SMS dialogs
 @Composable
 fun SendDialog(dismiss: () -> Unit){
 
@@ -52,7 +54,7 @@ fun SendDialog(dismiss: () -> Unit){
                         try {
                             vm.send(number)
                             dismiss()
-                        } catch(_: IllegalArgumentException){
+                        } catch(_: IllegalArgumentException){//Shows error when invalid phone number
                             Toast.makeText(context, "Invalid Number", Toast.LENGTH_SHORT).show()
                         }
                     },
@@ -84,7 +86,7 @@ fun ImportDialog(dismiss: () -> Unit){
                         try {
                             vm.import(import)
                             dismiss()
-                        } catch (_: SerializationException){
+                        } catch (_: SerializationException){ //If cannot be deserialized, sends error
                             Toast.makeText(context, "Invalid Exported Code", Toast.LENGTH_SHORT)
                                  .show()
 

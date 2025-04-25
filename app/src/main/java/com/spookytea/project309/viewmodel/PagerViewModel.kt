@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.map
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 
+//Base viewModel to store required pager logic
 abstract class PagerViewModel(protected val app: Application) : AndroidViewModel(app){
     protected val dao = DB.getDB(app.applicationContext).creatureDao()
     var creatures = dao.getAll()
@@ -19,8 +20,6 @@ abstract class PagerViewModel(protected val app: Application) : AndroidViewModel
 
     var selectedIndex by  mutableIntStateOf(0)
     val creatureCount = dao.rowCount()
-
-
 
     fun getArt(creature: Creature): String =
         app.applicationContext.resources.getStringArray(R.array.animals)[creature.artIndex]

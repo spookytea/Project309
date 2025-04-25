@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.spookytea.project309.viewmodel.MainViewModel
 
-class SleepView : PagerView(
+class SleepView : ViewBase(
     1.0f,
     0.9f,
     "Sleep",

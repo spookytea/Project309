@@ -20,6 +20,7 @@ class MainViewModel(app: Application) : PagerViewModel(app) {
 
     fun upHunger(index: Int) = viewModelScope.launch(Dispatchers.IO) {
         val current = dao.getCurrentSuspend(selectedIndex)
+        //Gets random hunger value so different pets have different liked foods
         val rand = (15..35).random(Random(index + current.id))
         dao.update(current.copy(hungerLevel = min(current.hungerLevel + rand, 100)))
     }
@@ -33,10 +34,6 @@ class MainViewModel(app: Application) : PagerViewModel(app) {
         }
 
     }
-
-
-
-
 
     fun sleep() = viewModelScope.launch(Dispatchers.IO){
         dao.update(

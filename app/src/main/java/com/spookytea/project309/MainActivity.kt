@@ -10,11 +10,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import com.spookytea.project309.view.EatView
 import com.spookytea.project309.view.MainView
-import com.spookytea.project309.view.PlayView
-import com.spookytea.project309.view.SleepView
-import com.spookytea.project309.view.StatsView
 import com.spookytea.project309.view.components.AddAnAnimalDialog
 import com.spookytea.project309.view.theme.Project309Theme
 import com.spookytea.project309.viewmodel.MainViewModel
@@ -27,19 +23,12 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-
-
-
-        val tabs = mutableListOf(
-            StatsView(),
-            SleepView(),
-            EatView(),
-            PlayView()
-        )
+        //Request runtime permissions | Privacy (no date) Android Developers. Available at: https://developer.android.com/training/permissions/requesting.
 
         val perms = arrayOf(SEND_SMS, POST_NOTIFICATIONS)
-        requestPermissions(perms, 8000)
+        requestPermissions(perms, 8000) //Asks the user for perms
 
+        //Loads need decay service without needing to be attached to app
         startForegroundService(Intent(this, NeedService::class.java))
 
 
@@ -49,14 +38,14 @@ class MainActivity : ComponentActivity() {
         setContent {
 
 
-
+            //Checks if there are creatures already, shows add dialog if not
             val isEmpty by viewModel.isEmpty.collectAsState(null)
 
             Project309Theme {
                 when (isEmpty) {
-                    true  -> AddAnAnimalDialog()
-                    false -> MainView().Show(tabs)
-                    null  -> return@Project309Theme
+                    true  -> AddAnAnimalDialog() //Show dialog when db empty
+                    false -> MainView().Show() //Show main view when there are creatures
+                    null  -> return@Project309Theme //Does nothing if list still loading
                 }
             }
 
