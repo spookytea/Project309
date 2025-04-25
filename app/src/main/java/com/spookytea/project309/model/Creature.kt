@@ -38,13 +38,14 @@ interface CreatureDao {
     @Query("SELECT * FROM creatures LIMIT 1 OFFSET :id")
     fun getCurrent(id:Int): Creature
 
+    @Query("SELECT * FROM creatures LIMIT 1 OFFSET :id")
+    suspend fun getCurrentSuspend(id:Int): Creature
+
     @Query("SELECT count(*) FROM creatures LIMIT 1")
     fun rowCount(): Flow<Int>
 
     @Update
-    fun update(c: Creature)
-
-
+    suspend fun update(c: Creature)
 
 
     @Insert

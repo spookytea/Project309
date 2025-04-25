@@ -35,7 +35,7 @@ class SleepView : PagerView(
         val current = creatures[page]
 
         Button(
-            onClick = { vm.sleep(current) },
+            onClick = { vm.sleep() },
             shape = if(landscape) RoundedCornerShape(10.dp) else RoundedCornerShape(20.dp),
             modifier = if(landscape) Modifier.padding(vertical = 20.dp)
                                              .padding(end=20.dp)

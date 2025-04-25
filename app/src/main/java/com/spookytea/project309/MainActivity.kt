@@ -1,8 +1,8 @@
 package com.spookytea.project309
 
+import android.Manifest.permission.POST_NOTIFICATIONS
 import android.Manifest.permission.SEND_SMS
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -27,11 +27,6 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val action: String? = intent?.action
-        val data: Uri? = intent?.data
-
-        println("789action $action")
-        println("789data $data")
 
 
 
@@ -42,7 +37,7 @@ class MainActivity : ComponentActivity() {
             PlayView()
         )
 
-        val perms = arrayOf(SEND_SMS)
+        val perms = arrayOf(SEND_SMS, POST_NOTIFICATIONS)
         requestPermissions(perms, 8000)
 
         startForegroundService(Intent(this, NeedService::class.java))
@@ -52,9 +47,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         setContent {
-//            var showTrading by rememberSaveable {  mutableStateOf(false) }
-//
-//            showTrading = checkSelfPermission(SEND_SMS) == PackageManager.PERMISSION_GRANTED
+
 
 
             val isEmpty by viewModel.isEmpty.collectAsState(null)

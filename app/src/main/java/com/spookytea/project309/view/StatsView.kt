@@ -32,10 +32,6 @@ class StatsView : PagerView(
     "Pet Statistics",
     Icons.Outlined.HealthAndSafety
 ){
-
-
-
-
     @Composable
     override fun AdditionalContent(page: Int, modifier: Modifier) {
         val viewModel: MainViewModel = viewModel(LocalActivity.current as ComponentActivity)

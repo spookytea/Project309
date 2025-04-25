@@ -1,5 +1,7 @@
 package com.spookytea.project309.view
 
+import android.Manifest.permission.SEND_SMS
+import android.content.pm.PackageManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.Column
@@ -36,7 +38,9 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat.checkSelfPermission
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -53,6 +57,8 @@ class MainView {
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun Show(tabs: List<PagerView>){
+
+
 
         val viewModel: MainViewModel = viewModel(LocalActivity.current as ComponentActivity)
         val nav = rememberNavController()
@@ -111,8 +117,11 @@ class MainView {
 
     @Composable
     private fun SMSButtons() {
+        var showTrading by rememberSaveable {  mutableStateOf(false) }
 
+        showTrading = checkSelfPermission(LocalContext.current, SEND_SMS) == PackageManager.PERMISSION_GRANTED
 
+        if(!showTrading) return
 
         var showDialog by rememberSaveable { mutableStateOf(SMSDialog.None) }
         Column {
