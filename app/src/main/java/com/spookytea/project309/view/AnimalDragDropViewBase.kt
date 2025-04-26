@@ -9,11 +9,13 @@ import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.draganddrop.dragAndDropSource
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -31,10 +33,10 @@ import com.spookytea.project309.viewmodel.MainViewModel
 //Base class to hold shared drag and drop data for eating + playing
 abstract class AnimalDragDropViewBase(
     protected val emojis: Array<String>,
-    name: String,
-    longName: String,
+    name_id: Int,
+    longName_id: Int,
     icon: ImageVector
-) : ViewBase(1.0f, 0.8f, name, longName, icon) {
+) : ViewBase(1.0f, 0.9f, name_id, longName_id, icon) {
 
 
     @SuppressLint("SwitchIntDef")
@@ -52,11 +54,12 @@ abstract class AnimalDragDropViewBase(
 
         when (LocalConfiguration.current.orientation) {
             ORIENTATION_PORTRAIT -> Row(
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 50.dp)
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),
+                horizontalArrangement = Arrangement.Center
             ) { GetEmojis(emojis, viewModel.isAsleep(current)) }
 
 
-            ORIENTATION_LANDSCAPE -> FlowRow(Modifier.padding(end=20.dp)) { //Overflowing row in case items don't fit
+            ORIENTATION_LANDSCAPE -> FlowRow(Modifier.padding(end=20.dp).width(48.dp)) { //Overflowing row in case items don't fit
                 GetEmojis(emojis, viewModel.isAsleep(current))
             }
 

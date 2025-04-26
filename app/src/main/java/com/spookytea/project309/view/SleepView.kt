@@ -15,15 +15,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.spookytea.project309.R
 import com.spookytea.project309.viewmodel.MainViewModel
 
 class SleepView : ViewBase(
     1.0f,
     0.9f,
-    "Sleep",
-    "Send your pet to sleep",
+    R.string.sleep,
+    R.string.send_your_pet_to_sleep,
     Icons.Outlined.Bedtime
 ) {
     @Composable
@@ -37,15 +39,17 @@ class SleepView : ViewBase(
         Button(
             onClick = { vm.sleep() },
             shape = if(landscape) RoundedCornerShape(10.dp) else RoundedCornerShape(20.dp),
-            modifier = if(landscape) Modifier.padding(vertical = 20.dp)
-                                             .padding(end=20.dp)
-                                             .fillMaxHeight()
-                       else Modifier.padding(bottom=20.dp)
-                                   .padding(horizontal = 50.dp)
-                                   .fillMaxWidth(),
+            modifier = if(landscape) Modifier
+                .padding(vertical = 20.dp)
+                .padding(end = 20.dp)
+                .fillMaxHeight()
+                       else Modifier
+                .padding(bottom = 20.dp)
+                .padding(horizontal = 50.dp)
+                .fillMaxWidth(),
             enabled = !vm.isAsleep(current)
         ) {
-            Text(name)
+            Text(stringResource(name_id))
         }
 
 

@@ -22,7 +22,10 @@ class SMSViewModel(app:Application) : PagerViewModel(app) {
         val current = dao.getCurrent(selectedIndex)
         val sms = app.applicationContext.getSystemService(SmsManager::class.java)
 
-        val creatureEnc = "Add \"${current.name}\" to your app:\n${encryptString(Json.encodeToString(current))}"
+        val creatureEnc = """
+            Add "${current.name}" to your app:
+            ${encryptString(Json.encodeToString(current))}
+        """.trimIndent()
 
         sms.sendMultipartTextMessage( //Sends message split to avoid char limits
             destination,

@@ -39,16 +39,17 @@ import com.spookytea.project309.viewmodel.MainViewModel
 abstract class ViewBase(
     val animalSize: Float, //Weight of animal display
     val horizontalSize: Float, //Weight of animal display when landscape
-    val name: String, //Nav name
-    val longName: String, //Header name
+    val name_id: Int, //Nav name
+    val longName_id: Int, //Header name
     val icon: ImageVector, //Nav icon
 ) {
+
+
 
     lateinit var pager: PagerState
     protected var landscape = false
 
-    var dropCallBack by mutableStateOf<DragAndDropTarget?>(null) //Hasto be here to apply to animal display
-
+    var dropCallBack by mutableStateOf<DragAndDropTarget?>(null) //Has to be here to apply to animal display
 
 
     @OptIn(ExperimentalFoundationApi::class)

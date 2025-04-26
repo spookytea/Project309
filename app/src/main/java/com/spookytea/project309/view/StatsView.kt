@@ -20,16 +20,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.spookytea.project309.R
 import com.spookytea.project309.viewmodel.MainViewModel
 
 class StatsView : ViewBase(
     0.75f,
     0.35f,
-    "Stats",
-    "Pet Statistics",
+    R.string.stats,
+    R.string.pet_statistics,
     Icons.Outlined.HealthAndSafety
 ){
     @Composable
@@ -48,9 +50,9 @@ class StatsView : ViewBase(
 
             val current = creatures[page]
             mapOf(
-                "Fun" to current.funLevel,
-                "Hunger" to current.hungerLevel,
-                "Energy" to current.energyLevel
+                stringResource(R.string.fun_string) to current.funLevel,
+                stringResource(R.string.hunger) to current.hungerLevel,
+                stringResource(R.string.energy) to current.energyLevel
             ).forEach { (name, num) ->
 
                 //Score stored out of 100 instead of as decimal
@@ -58,9 +60,11 @@ class StatsView : ViewBase(
                 println("$name: $num")
 
                 LinearProgressIndicator(
-                    modifier = Modifier.padding(horizontal = 20.dp, vertical = 5.dp)
+                    modifier = Modifier
+                        .padding(horizontal = 20.dp, vertical = 5.dp)
                         .height(30.dp)
-                        .clip(RoundedCornerShape(10.dp)).fillMaxWidth(),
+                        .clip(RoundedCornerShape(10.dp))
+                        .fillMaxWidth(),
                     progress = { asProgress },
                     color = when {
                         asProgress < 0.4f -> Color.Red
@@ -73,7 +77,9 @@ class StatsView : ViewBase(
 
                 )
                 Text(
-                    modifier = Modifier.padding(horizontal = 20.dp).fillMaxWidth(),
+                    modifier = Modifier
+                        .padding(horizontal = 20.dp)
+                        .fillMaxWidth(),
                     text = name,
                     textAlign = TextAlign.End
                 )

@@ -14,13 +14,14 @@ import androidx.compose.ui.draganddrop.DragAndDropEvent
 import androidx.compose.ui.draganddrop.DragAndDropTarget
 import androidx.compose.ui.draganddrop.toAndroidDragEvent
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.spookytea.project309.R
 import com.spookytea.project309.viewmodel.MainViewModel
 import kotlinx.coroutines.Job
 
 class PlayView : AnimalDragDropViewBase(
-    arrayOf("⚾", "🎮"),
-    "Play",
-    "Play with your pet",
+    arrayOf("⚾", "🎮", "🧸", "♟️"),
+    R.string.play,
+    R.string.play_with_your_pet,
     Icons.Outlined.SportsEsports
 ) {
     @Composable

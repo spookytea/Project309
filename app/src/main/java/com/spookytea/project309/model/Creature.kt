@@ -47,7 +47,6 @@ interface CreatureDao {
     @Update
     suspend fun update(c: Creature)
 
-
     @Insert
     suspend fun add(creature: Creature)
 

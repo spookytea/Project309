@@ -77,7 +77,7 @@ class NeedService : Service() {
                             )
 
                             val notif = NotificationCompat.Builder(this@NeedService, notif_id)
-                                                          .setContentText("")
+                                                          .setContentText(it.name + getString(R.string.has_awoken))
                                                           .build()
 
                             //Check for notification perm and send notification if done sleeping

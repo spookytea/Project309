@@ -11,12 +11,13 @@ import androidx.compose.ui.draganddrop.DragAndDropEvent
 import androidx.compose.ui.draganddrop.DragAndDropTarget
 import androidx.compose.ui.draganddrop.toAndroidDragEvent
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.spookytea.project309.R
 import com.spookytea.project309.viewmodel.MainViewModel
 
 class EatView : AnimalDragDropViewBase(
-    arrayOf("⚾", "🎮"),
-    "Feed",
-    "Feed your pet",
+    arrayOf("🍓", "🍵", "🍔", "🍕"),
+    R.string.feed,
+    R.string.feed_your_pet,
     Icons.Outlined.RamenDining
 ) {
     @Composable

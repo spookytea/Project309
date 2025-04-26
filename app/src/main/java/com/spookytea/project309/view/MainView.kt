@@ -39,12 +39,15 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat.checkSelfPermission
+import androidx.core.content.ContextCompat.getString
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.spookytea.project309.R
 import com.spookytea.project309.view.components.ImportDialog
 import com.spookytea.project309.view.components.SendDialog
 import com.spookytea.project309.viewmodel.MainViewModel
@@ -84,14 +87,15 @@ class MainView {
             drawerContent = {
                 ModalDrawerSheet {
                     //Generates navigation links for all views in array
+                    val context = LocalContext.current
                     tabs.forEachIndexed { index, t ->
                         NavigationDrawerItem(
-                            label = { Text(t.name) },
-                            icon = { Icon(t.icon, t.name) },
+                            label = { Text(stringResource(t.name_id))},
+                            icon = { Icon(t.icon, stringResource(t.name_id)) },
                             selected = selected == index,
                             onClick = {
                                 selected = index
-                                nav.navigate(t.name)
+                                nav.navigate(getString(context, t.name_id))
                                 scope.launch { drawerState.close() }
                             }
                         )
@@ -103,26 +107,28 @@ class MainView {
         ) {
             Scaffold(topBar = {
                 CenterAlignedTopAppBar(
-                    title = { Text(tabs[selected].longName) },
+                    title = { Text(stringResource(tabs[selected].longName_id)) },
                     navigationIcon = {
                         IconButton(onClick = {
                             drawerState.apply {
                                 scope.launch { if (isOpen) close() else open() }
                             }
-                        }) { Icon(Icons.Filled.Menu, "Navigation Drawer") }
+                        }) { Icon(Icons.Filled.Menu, stringResource(R.string.navigation_drawer)) }
                     }
                 )
             }) { p ->
                 val pageCount by viewModel.creatureCount.collectAsState(0)
                 val pager = rememberPagerState(initialPage = viewModel.selectedIndex) { pageCount }
-
+                val context = LocalContext.current
                 //Vasava, K. (2024) ‘Navigation in Jetpack compose. Full guide Beginner to Advanced.’, Medium, 2 April. Available at: https://medium.com/@KaushalVasava/navigation-in-jetpack-compose-full-guide-beginner-to-advanced-950c1133740.
-                NavHost(nav, startDestination = tabs[0].name, Modifier.padding(p)) {
+
+                NavHost(nav, startDestination = stringResource(tabs[0].name_id), Modifier.padding(p)) {
                     tabs.forEach { tab ->
                         //Makes a view and passes a shared pager state for each tab so state is preserved across view switches
                         //Routing done using strings as I found this simpler and args weren't needed to be passed
+
                         tab.pager = pager
-                        composable(tab.name) { tab.Show() }
+                        composable(getString(context, tab.name_id)) { tab.Show() }
                     }
                 }
             }
@@ -154,7 +160,7 @@ class MainView {
                         topStart = 20.dp
                     )
                 ) {
-                    Icon(Icons.AutoMirrored.Filled.CallMade, "Send Icon")
+                    Icon(Icons.AutoMirrored.Filled.CallMade, stringResource(R.string.send_icon))
                     Text("Send")
                 }
                 OutlinedButton(
@@ -167,8 +173,8 @@ class MainView {
                         topEnd = 20.dp
                     )
                 ) {
-                    Icon(Icons.AutoMirrored.Filled.CallReceived, "Import Icon")
-                    Text("Import")
+                    Icon(Icons.AutoMirrored.Filled.CallReceived, stringResource(R.string.import_icon))
+                    Text(stringResource(R.string.import_string))
                 }
             }
 
