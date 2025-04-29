@@ -46,7 +46,8 @@ class PlayView : AnimalDragDropViewBase(
 
                 override fun onExited(event: DragAndDropEvent) {
                     //cancels and resets when exited to stop upping fun
-                    job!!.cancel()
+
+                    job?.cancel()
                     job = null
                 }
 
